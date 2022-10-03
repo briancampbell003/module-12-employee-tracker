@@ -1,0 +1,25 @@
+{
+  "name": "module-12-employee-tracker",
+  "version": "1.0.0",
+  "description": "Command-line app to manage a company's employee database w node.js, inquirer and mysql",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/briancampbell003/module-12-employee-tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/briancampbell003/module-12-employee-tracker/issues"
+  },
+  "homepage": "https://github.com/briancampbell003/module-12-employee-tracker#readme",
+  "dependencies": {
+    "inquirer": "^8.2.4",
+    "mysql2": "^2.2.5",
+    "console.table": "0.10.0"
+  }
+}
