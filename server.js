@@ -16,9 +16,9 @@ const db = mysql.createConnection(
       database: 'organization_db'
     },
     console.log(`Connected to the organization_db database.`)
-  );
+);
 
-//   I DONT THINK ILL USE THEsE EMPTY ARRAYS
+//   I DONT THINK ILL USE THESE EMPTY ARRAYS
 let myDepts = [];
 let myRoles = [];
 let myEmployees = [];
@@ -33,7 +33,7 @@ function mainMenu() {
                 type: 'list',
                 message: 'Select an action',
                 name: 'mainMenu',
-                choices: ['View all departments', 'View all roles', 'View all employees', 'Add department', 'Add role', 'Add employee']
+                choices: ['View all departments', 'View all roles', 'View all employees', 'Add department', 'Add role', 'Add employee', 'Exit']
             }
         ])
         .then(response => {
@@ -62,18 +62,37 @@ function mainMenu() {
                     addEmployee();
                     break;
 
+                case 'Exit':
+                    exit();
+
                 default:
                     break;
             }
         })
 }
 
-// Seperate JS files for these???:
-// function viewDepts() {}
-// function viewRoles() {}
-// function viewEmployees() {}
+// View all functions for departments, roles, employees
+function viewDepts() {
+    db.query('SELECT * FROM depts', function (err, results) {
+        console.table(results);
+        mainMenu();
+      });
+}
+function viewRoles() {
+    db.query('SELECT * FROM roles', function (err, results) {
+        console.table(results);
+        mainMenu();
+      });
+}
+function viewEmployees() {
+    db.query('SELECT * FROM employees', function (err, results) {
+        console.table(results);
+        mainMenu();
+      });
+}
 
-// Add department, SOMETHING, then return to Main Menu
+
+// Add department, query database to insert record, then return to Main Menu
 function addDept() {
     inquirer
         .prompt([
@@ -85,13 +104,17 @@ function addDept() {
         ])
         .then(response => {
             let { deptName } = response;
-            let dept = new Dept(deptName);
-            myDepts.push(dept);
+            // let dept = new Dept(deptName);
+            let sql = `INSERT INTO depts (deptname) VALUES ("${deptName}")`;
+            db.query(sql, function (err, result) {
+                if (err) throw err;
+                console.log("1 record inserted");
+              });
             mainMenu();
         })
 }
 
-// Add role, SOMETHING, then return to Main Menu
+// Add role, query database to insert record, then return to Main Menu
 function addRole() {
     inquirer
         .prompt([
@@ -107,19 +130,24 @@ function addRole() {
             },
             {
                 type: 'input',
-                message: "Enter the department to which the new role belongs",
+                message: "Enter the department id for the new role",
                 name: 'roleDept',
             }
         ])
         .then(response => {
             let { roleName, roleSalary, roleDept } = response;
-            let role = new Role(roleName, roleSalary, roleDept);
-            myRoles.push(role);
+            // let role = new Role(roleName, roleSalary, roleDept);
+            let sql = `INSERT INTO roles (title, salary, dept_id) VALUES ("${roleName}", "${roleSalary}", ${roleDept})`;
+            db.query(sql, function (err, result) {
+                if (err) throw err;
+                console.log("1 record inserted");
+              });
+            // myRoles.push(role);
             mainMenu();
         })
 }
 
-// Add employee, SOMETHING, then return to Main Menu
+// Add employee, query database to insert record, then return to Main Menu
 function addEmployee() {
     inquirer
         .prompt([
@@ -135,19 +163,24 @@ function addEmployee() {
             },
             {
                 type: 'input',
-                message: "Enter the new employee's role",
+                message: "Enter the new employee's role id",
                 name: 'empRole',
             },
             {
                 type: 'input',
-                message: "Enter the new employee's manager",
+                message: "Enter the new employee's manager id",
                 name: 'empManager',
             }
         ])
         .then(response => {
             let { empFirstName, empLastName, empRole, empManager } = response;
-            let employee = new Employee(empFirstName, empLastName, empRole, empManager);
-            myEmployees.push(employee);
+            let sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ("${empFirstName}", "${empLastName}", ${empRole}, ${empManager})`;
+            db.query(sql, function (err, result) {
+                if (err) throw err;
+                console.log("1 record inserted");
+              });
+            // let employee = new Employee(empFirstName, empLastName, empRole, empManager);
+            // myEmployees.push(employee);
             mainMenu();
         })
 }

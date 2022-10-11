@@ -1,31 +1,34 @@
+-- Active: 1664495632750@@127.0.0.1@3306@organization_db
 DROP DATABASE IF EXISTS organization_db;
 CREATE DATABASE organization_db;
 
 USE organization_db;
 
 CREATE TABLE depts (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(30) NOT NULL,
-  PRIMARY KEY (id)
+  deptid INT NOT NULL AUTO_INCREMENT,
+  deptname VARCHAR(30) NOT NULL,
+  PRIMARY KEY (deptid)
 );
 
 CREATE TABLE roles (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  roleid INT NOT NULL AUTO_INCREMENT,
   title VARCHAR(30) NOT NULL,
-  salary DECIMAL(10,2) NOT NULL,
-  dept_id INT NOT NULL,
+  salary DECIMAL(15,2) NOT NULL,
+  dept_id INT,
+  PRIMARY KEY (roleid),
   FOREIGN KEY (dept_id)
-  REFERENCES depts(id)
+  REFERENCES depts(deptid)
   ON DELETE SET NULL
 );
 
 CREATE TABLE employees (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  employeeid INT NOT NULL AUTO_INCREMENT,
   first_name VARCHAR(30) NOT NULL,
   last_name VARCHAR(30) NOT NULL,
-  role_id INT NOT NULL,
-  manager_id INT
+  role_id INT,
+  manager_id INT,
+  PRIMARY KEY (employeeid),
   FOREIGN KEY (role_id)
-  REFERENCES roles(id)
+  REFERENCES roles(roleid)
   ON DELETE SET NULL
 );
