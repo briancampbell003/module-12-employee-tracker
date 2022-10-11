@@ -28,7 +28,7 @@ function mainMenu() {
                 type: 'list',
                 message: 'Select an action',
                 name: 'mainMenu',
-                choices: ['View all departments', 'View all roles', 'View all employees', 'Add department', 'Add role', 'Add employee', 'Exit']
+                choices: ['View all departments', 'View all roles', 'View all employees', 'Add department', 'Add role', 'Add employee', 'Update employee', 'Exit']
             }
         ])
         .then(response => {
@@ -55,6 +55,10 @@ function mainMenu() {
 
                 case 'Add employee':
                     addEmployee();
+                    break;
+
+                case 'Update employee':
+                    updateEmployee();
                     break;
 
                 case 'Exit':
@@ -162,6 +166,72 @@ function addEmployee() {
             {
                 type: 'input',
                 message: "Enter the new employee's manager id",
+                name: 'empManager',
+            }
+        ])
+        .then(response => {
+            let { empFirstName, empLastName, empRole, empManager } = response;
+            let sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ("${empFirstName}", "${empLastName}", ${empRole}, ${empManager})`;
+            db.query(sql, function (err, result) {
+                if (err) throw err;
+                console.log("1 record inserted");
+              });
+            // let employee = new Employee(empFirstName, empLastName, empRole, empManager);
+            mainMenu();
+        })
+}
+
+// Add employee, query database to insert record, then return to Main Menu
+function updateEmployee() {
+    db.query('SELECT * FROM employees', function (err, results) {
+        console.log(results);
+        inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    message: "Select an employee to update",
+                    name: 'employeeToUpdate',
+                    choices: `${results[0].first_name}`
+                }
+            ])
+
+      });
+    //     .then(response => {
+    //         let { empFirstName, empLastName, empRole, empManager } = response;
+    //         let sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ("${empFirstName}", "${empLastName}", ${empRole}, ${empManager})`;
+    //         db.query(sql, function (err, result) {
+    //             if (err) throw err;
+    //             console.log("1 record inserted");
+    //           });
+    //         // let employee = new Employee(empFirstName, empLastName, empRole, empManager);
+    //         mainMenu();
+    //     })
+}
+
+
+
+// Select employee from list built from database query, update that employee, query database to insert record, then return to Main Menu
+function addEmployee() {
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                message: "Enter the first name of the new employee",
+                name: 'empFirstName',
+            },
+            {
+                type: 'input',
+                message: "Enter the first name of the new employee",
+                name: 'empLastName',
+            },
+            {
+                type: 'input',
+                message: "Enter the employee's new role id",
+                name: 'empRole',
+            },
+            {
+                type: 'input',
+                message: "Enter the employee's new manager id",
                 name: 'empManager',
             }
         ])
