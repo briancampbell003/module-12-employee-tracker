@@ -18,11 +18,6 @@ const db = mysql.createConnection(
     console.log(`Connected to the organization_db database.`)
 );
 
-//   I DONT THINK ILL USE THESE EMPTY ARRAYS
-let myDepts = [];
-let myRoles = [];
-let myEmployees = [];
-
 mainMenu();
 
 // Main Menu to choose to an action
@@ -104,7 +99,6 @@ function addDept() {
         ])
         .then(response => {
             let { deptName } = response;
-            // let dept = new Dept(deptName);
             let sql = `INSERT INTO depts (deptname) VALUES ("${deptName}")`;
             db.query(sql, function (err, result) {
                 if (err) throw err;
@@ -136,13 +130,12 @@ function addRole() {
         ])
         .then(response => {
             let { roleName, roleSalary, roleDept } = response;
-            // let role = new Role(roleName, roleSalary, roleDept);
             let sql = `INSERT INTO roles (title, salary, dept_id) VALUES ("${roleName}", "${roleSalary}", ${roleDept})`;
             db.query(sql, function (err, result) {
                 if (err) throw err;
                 console.log("1 record inserted");
-              });
-            // myRoles.push(role);
+            });
+            // let role = new Role(roleName, roleSalary, roleDept);
             mainMenu();
         })
 }
@@ -180,7 +173,6 @@ function addEmployee() {
                 console.log("1 record inserted");
               });
             // let employee = new Employee(empFirstName, empLastName, empRole, empManager);
-            // myEmployees.push(employee);
             mainMenu();
         })
 }
